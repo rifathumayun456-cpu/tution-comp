@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>DUEL — Premium Competition Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#080D18;--surface:#10192B;--card:#15223A;--card2:#1A2944;--gold:#DDB65C;--gold2:#F4D98B;
+ --text:#F5F7FC;--muted:#91A0B8;--line:rgba(160,181,216,.14);--green:#27C987;--red:#F06C72;--slate:#64748B;
+ --shadow:0 18px 50px rgba(0,0,0,.28);--radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:radial-gradient(ellipse at 50% -15%,#263653 0%,#10192B 34%,var(--bg) 72%);color:var(--text);font-family:'Plus Jakarta Sans','Noto Sans Bengali',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.screen{flex:1;overflow-y:auto;padding:22px;padding-top:calc(22px + env(safe-area-inset-top));padding-bottom:calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;overscroll-behavior:contain;scroll-behavior:smooth}.screen.screen-enter{animation:fadeIn .22s cubic-bezier(.2,.75,.25,1)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-1.2px}h2{font-size:22px;font-weight:800;letter-spacing:-.5px}h3{font-size:17px;font-weight:800}
+.muted{color:var(--muted)}.gold{color:var(--gold2)}
+.logo{font-size:64px;font-weight:800;letter-spacing:5px;line-height:1;color:var(--gold2);text-shadow:0 0 42px rgba(221,182,92,.25)}
+.tagline{color:var(--muted);letter-spacing:3px;font-size:10px;font-weight:800}
+.splash{justify-content:center;align-items:center;text-align:center;gap:14px}
+.home{justify-content:flex-start;padding-top:11vh;text-align:center;gap:15px;align-items:stretch}
+.home .logo{font-size:58px;margin-bottom:4px}.subtitle{color:var(--muted);margin-bottom:24px;font-size:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border-radius:15px;font-size:14px;font-weight:800;border:1px solid transparent;transition:transform .15s,filter .15s;width:100%;min-height:54px}
+.btn:active,.eval-btn:active,.nav-btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#17130A;box-shadow:0 9px 28px rgba(221,182,92,.19)}
+.btn-outline{background:rgba(255,255,255,.025);color:var(--text);border-color:var(--line)}
+.btn-danger{background:linear-gradient(135deg,#F17A7F,#D94D59);color:white}
+.btn-ghost{background:transparent;color:var(--muted);font-weight:700;min-height:44px}
+.card{background:linear-gradient(145deg,rgba(28,44,70,.96),rgba(18,30,50,.96));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:17px;min-width:0}
+.field label,.section-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.4px}
+.field input,.reg-input,.search-bar input{width:100%;padding:14px 15px;background:#0D1728;border:1px solid var(--line);border-radius:13px;color:var(--text);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.reg-input:focus,.search-bar input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(221,182,92,.1)}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.slider-container{display:flex;align-items:center;gap:12px}
+input[type=range]{flex:1;accent-color:var(--gold)}
+.slider-value{min-width:36px;text-align:center;font-size:20px;font-weight:800;color:var(--gold2)}
+.header-bar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.back-btn{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);font-size:20px;width:42px;height:42px;border-radius:13px;display:grid;place-items:center}
+.reg-list{display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;padding:2px 2px 16px}
+.reg-item{display:flex;flex-direction:column;gap:7px}.reg-label{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1.3px}
+.scoreboard-wrap{margin:0 0 14px}
+.scoreboard-heading{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px}
+.scoreboard-heading span:first-child{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--muted);text-transform:uppercase}
+.scoreboard-heading span:last-child{font-size:10px;color:var(--muted)}
+/* Key fix: a responsive grid replaces the old horizontal scrolling strip.
+   Every contestant and score remains visible together on the arena screen. */
+.scoreboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,105px),1fr));gap:8px;width:100%;padding:0;margin:0;overflow:visible}
+.score-card{min-width:0;background:linear-gradient(145deg,#1B2A45,#121E33);border:1px solid var(--line);border-radius:13px;padding:10px 8px;text-align:center;transition:border-color .2s,background .2s}
+.score-card.active{border-color:rgba(221,182,92,.85);background:linear-gradient(145deg,#3A3450,#1B2942);box-shadow:inset 0 0 0 1px rgba(221,182,92,.12),0 5px 18px rgba(221,182,92,.09);transform:translateY(-1px)}.score-card.answered:not(.active) .score-name:after{content:' ✓';color:var(--green)}.score-card{transition:border-color .2s,background .2s,transform .2s}
+.score-name{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+.score-value{font-size:20px;font-weight:800;color:var(--gold2);font-variant-numeric:tabular-nums}
+.contestant-display{text-align:center;padding:22px 16px;background:radial-gradient(ellipse at center,rgba(48,67,101,.55),transparent 74%);border:1px solid rgba(160,181,216,.08);border-radius:22px;margin:2px 0 15px;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:160px}
+.round-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(221,182,92,.11);border:1px solid rgba(221,182,92,.28);border-radius:30px;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:1.2px;margin-bottom:11px}
+.contestant-number{font-size:10px;color:var(--muted);letter-spacing:1.7px;font-weight:800;margin-bottom:8px}
+.contestant-name{font-size:clamp(24px,6vw,32px);font-weight:800;margin-bottom:7px;word-break:break-word;line-height:1.15}
+.contestant-score{font-size:12px;color:var(--muted)}.contestant-score strong{color:var(--gold2);font-size:21px;font-weight:800}
+.eval-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:10px}
+.eval-btn{padding:15px 5px;border-radius:14px;border:1px solid rgba(255,255,255,.08);font-weight:800;font-size:10px;color:#fff;transition:transform .1s;letter-spacing:.5px;line-height:1.3}
+.eval-btn .pts{display:block;font-size:15px;margin-top:4px}
+.eval-correct{background:linear-gradient(145deg,#22B879,#16895D)}.eval-incorrect{background:linear-gradient(145deg,#E96870,#C84350)}.eval-skip{background:linear-gradient(145deg,#64748B,#46566D)}
+.arena-progress{height:5px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin:0 1px 12px}.arena-progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .28s ease}.arena-meta{display:flex;align-items:center;justify-content:space-between;margin:0 2px 7px;font-size:10px;color:var(--muted);font-weight:700}.arena-meta strong{color:var(--gold2)}
+.nav-buttons{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;margin:8px 0 10px}.nav-btn{min-height:48px;padding:10px 5px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .16s,background .16s,border-color .16s,opacity .16s}.nav-btn.primary{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#17130A;border-color:var(--gold);box-shadow:0 6px 18px rgba(221,182,92,.13)}.nav-btn.undo{background:rgba(240,108,114,.07);border-color:rgba(240,108,114,.2)}.nav-btn:disabled{opacity:.28;cursor:not-allowed;box-shadow:none}.nav-btn:not(:disabled):active{transform:scale(.96)}.nav-btn small{font-size:9px;opacity:.72;font-weight:700}.eval-btn{min-height:72px;box-shadow:0 6px 16px rgba(0,0,0,.13)}.eval-btn.selected{outline:2px solid rgba(255,255,255,.82);outline-offset:2px;filter:saturate(1.12)}.eval-btn:disabled{opacity:.42;filter:grayscale(.4)}.answer-status{display:flex;align-items:center;justify-content:center;gap:7px;min-height:28px;color:var(--muted);font-size:11px;font-weight:700;margin:0 0 6px}.answer-status.done{color:var(--green)}.answer-status .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.champion-card{text-align:center;padding:25px 18px;background:radial-gradient(ellipse at top,rgba(221,182,92,.18),transparent 70%),linear-gradient(145deg,#282719,#171A20);border:1px solid rgba(221,182,92,.48);border-radius:22px;margin-bottom:22px;box-shadow:0 12px 38px rgba(221,182,92,.08)}
+.trophy{font-size:46px;margin-bottom:8px;display:block}.champion-label{color:var(--gold2);font-size:11px;font-weight:800;letter-spacing:2px;margin-bottom:10px}
+.champion-name{font-size:24px;font-weight:800;color:var(--gold2);line-height:1.2}.champion-score{font-size:14px;color:var(--gold);font-weight:800;margin:3px 0 9px}.joint-note{font-size:10px;color:var(--muted);margin-top:4px}
+.leaderboard-item{display:flex;align-items:center;padding:13px 14px;background:linear-gradient(120deg,rgba(26,41,68,.95),rgba(18,30,50,.95));border:1px solid var(--line);border-radius:13px;margin-bottom:8px;gap:11px}
+.rank-badge{min-width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:12px;background:#0D1728;color:var(--muted);flex-shrink:0}
+.rank-badge.first{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#17130A}.rank-badge.second{background:#B9C3D1;color:#101827}.rank-badge.third{background:#B97848;color:white}
+.lb-name{flex:1;font-weight:700;font-size:13px;word-break:break-word}.lb-score{font-weight:800;color:var(--gold2);font-size:17px;font-variant-numeric:tabular-nums}
+.history-item{position:relative;padding:15px 45px 15px 15px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;cursor:pointer}
+.history-title{font-weight:800;font-size:14px;margin-bottom:4px;word-break:break-word}.history-meta{font-size:11px;color:var(--muted)}.history-winners{color:var(--gold2);font-size:12px;margin-top:7px;font-weight:700}
+.history-delete{position:absolute;top:9px;right:9px;background:rgba(240,108,114,.1);border:0;color:var(--red);font-size:14px;width:30px;height:30px;border-radius:9px}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 20px}
+.empty-icon{font-size:48px;opacity:.65}
+.search-bar{display:flex;gap:8px;margin-bottom:12px}.section-label{margin:5px 0 10px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.76);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;z-index:100}
+.modal{background:#17243B;border:1px solid var(--line);border-radius:20px;padding:23px;max-width:400px;width:100%;box-shadow:var(--shadow)}
+.modal h3{margin-bottom:10px}.modal p{color:var(--muted);margin-bottom:19px;line-height:1.55;font-size:13px}
+.modal-actions{display:flex;gap:8px}.modal-actions button{flex:1;padding:12px;border-radius:12px;font-weight:800;border:none;font-size:13px}
+.modal-cancel{background:transparent;border:1px solid var(--line)!important;color:var(--text)}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:#1A2944;border:1px solid var(--gold);color:var(--text);padding:13px 20px;border-radius:13px;font-weight:700;z-index:200;transition:transform .3s;max-width:90vw;text-align:center;font-size:13px;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:390px){.screen{padding-left:16px;padding-right:16px}.scoreboard{grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:6px}.score-card{padding:9px 5px}.score-value{font-size:18px}.eval-btn{font-size:9px}.row{gap:7px}}
+@media print{
+ body{background:#fff!important;color:#000!important;overflow:visible!important}
+ html,body,.app,.screen{height:auto!important;overflow:visible!important;max-width:none!important}
+ .no-print{display:none!important}.screen{padding:20px!important;animation:none!important}
+ .champion-card{background:#f5f5f5!important;border-color:#999!important;box-shadow:none!important}
+ .champion-name,.champion-score,.champion-label,.gold{color:#000!important}
+ .leaderboard-item{background:#fafafa!important;border-color:#ccc!important;page-break-inside:avoid}
+ .lb-name,.lb-score,h1,h2,h3,.muted{color:#000!important}
+ .rank-badge{background:#eee!important;color:#000!important;border:1px solid #666}
+ .scoreboard-wrap,.eval-buttons,.nav-buttons,.header-bar{display:none!important}
+}
+button:focus-visible,input:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:380px){.screen{padding-left:14px;padding-right:14px}.scoreboard{grid-template-columns:repeat(2,minmax(0,1fr))}.score-value{font-size:18px}.contestant-display{min-height:140px;padding:17px 12px}.eval-buttons{gap:7px}.eval-btn{font-size:9px}}
+
+/* Pass challenge */
+.pass-trigger{margin:0 0 10px;min-height:52px;display:flex;flex-direction:column;gap:3px;background:linear-gradient(135deg,rgba(221,182,92,.17),rgba(221,182,92,.07));border:1px solid rgba(221,182,92,.42);color:var(--gold2);font-size:12px;font-weight:900;letter-spacing:.7px}
+.pass-trigger small{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:0}
+.pass-trigger:disabled{opacity:.35;cursor:not-allowed}
+.pass-picker{max-height:min(82dvh,620px);overflow:auto}
+.pass-modal-kicker{font-size:10px;font-weight:900;letter-spacing:1.5px;color:var(--gold2);margin-bottom:8px}
+.pass-choices{display:flex;flex-direction:column;gap:8px;margin:0 0 14px}
+.pass-choice{display:flex;align-items:center;gap:12px;padding:12px;background:#0D1728;border:1px solid var(--line);border-radius:13px;color:var(--text);text-align:left;font-size:13px;font-weight:800}
+.pass-choice-avatar{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(221,182,92,.14);color:var(--gold2);font-size:11px}
+.pass-choice-arrow{margin-left:auto;color:var(--gold2);font-size:22px}
+.pass-cancel{min-height:44px}
+.pass-live-card{background:linear-gradient(145deg,rgba(40,52,78,.96),rgba(17,27,45,.98));border:1px solid rgba(221,182,92,.38);border-radius:18px;padding:15px;margin:0 0 12px;text-align:center}
+.pass-live-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.pass-live-label{font-size:10px;font-weight:900;letter-spacing:1.1px;color:var(--gold2)}
+.pass-live-to{font-size:9px;font-weight:800;color:var(--muted)}
+.pass-timer{font-size:42px;line-height:1.2;font-weight:900;letter-spacing:1px;color:var(--gold2);font-variant-numeric:tabular-nums;margin:7px 0}
+.pass-timer-track{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.pass-timer-track span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#27C987,#DDB65C);transition:width .18s linear}
+.pass-live-hint{font-size:10px;color:var(--muted);margin:9px 0 12px}
+.pass-eval-buttons{margin:0;grid-template-columns:1fr 1fr}
+.pass-eval-buttons .eval-btn{font-size:9px;min-height:68px}
+
+</style>
+</head>
+<body>
+<div class="app" id="app"></div><div id="modal-root"></div><div id="toast-root"></div>
+<script>
+(function(){
+'use strict';
+const STORAGE_KEY='duel_app_v1',SCHEMA_VERSION=2;
+function deepClone(o){return JSON.parse(JSON.stringify(o))}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function pad2(n){return String(n).padStart(2,'0')}
+function finiteNumber(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback}
+function formatPoints(value){const n=finiteNumber(value,0);return `${n>0?'+':''}${Number.isInteger(n)?n:Number(n.toFixed(4))}`}
+function defaultState(){const today=new Date().toISOString().slice(0,10);return{screen:'splash',config:{defaultCorrect:2,defaultIncorrect:-1,defaultSkipped:0,passSeconds:10,passTimeoutPenalty:1,passCorrect:1,passIncorrect:-1,passEligibility:'incorrect_skip'},createDraft:{title:'',date:today,contestantCount:2,correct:2,incorrect:-1,skipped:0,names:[]},activeCompetition:null,history:[],historyDetailId:null,historySearch:'',historySort:'newest'}}
+function normalizeCompetition(c){
+ if(!c||!Array.isArray(c.contestants))return c;
+ c.contestants=c.contestants.map(x=>({name:String(x.name??'Unnamed'),score:Number(x.score)||0}));
+ c.answers=Array.isArray(c.answers)?c.answers:[];
+ c.scoring=c.scoring||{correct:2,incorrect:-1,skipped:0};
+ c.currentRound=Math.max(1,Number(c.currentRound)||1);
+ c.currentContestantIndex=Math.max(0,Math.min(c.contestants.length-1,Number(c.currentContestantIndex)||0));
+ c.totalRounds=Math.max(1,Number(c.totalRounds)||1);
+ c.passAttempts=Array.isArray(c.passAttempts)?c.passAttempts:[];
+ const ps=c.passSettings||{};c.passSettings={seconds:Math.max(1,Math.min(300,finiteNumber(ps.seconds,10))),timeoutPenalty:Math.max(0,finiteNumber(ps.timeoutPenalty,1)),correct:finiteNumber(ps.correct,1),incorrect:finiteNumber(ps.incorrect,-1),eligibility:ps.eligibility==='skip_only'?'skip_only':'incorrect_skip'};
+ c.undoStack=Array.isArray(c.undoStack)?c.undoStack:[];c.redoStack=Array.isArray(c.redoStack)?c.redoStack:[];
+ return c;
+}
+function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return null;const s=JSON.parse(raw),d=defaultState();const out=Object.assign(d,s);out.config=Object.assign(d.config,s.config||{});out.createDraft=Object.assign(d.createDraft,s.createDraft||{});out.history=Array.isArray(s.history)?s.history.map(normalizeCompetition):[];out.activeCompetition=normalizeCompetition(s.activeCompetition);return out}catch(e){console.warn('Load failed',e);return null}}
+let state=loadState()||defaultState();
+state.config.defaultCorrect=finiteNumber(state.config.defaultCorrect,2);state.config.defaultIncorrect=finiteNumber(state.config.defaultIncorrect,-1);state.config.defaultSkipped=finiteNumber(state.config.defaultSkipped,0);
+state.config.passSeconds=Math.max(1,Math.min(300,finiteNumber(state.config.passSeconds,10)));state.config.passTimeoutPenalty=Math.max(0,finiteNumber(state.config.passTimeoutPenalty,1));state.config.passCorrect=finiteNumber(state.config.passCorrect,1);state.config.passIncorrect=finiteNumber(state.config.passIncorrect,-1);state.config.passEligibility=state.config.passEligibility==='skip_only'?'skip_only':'incorrect_skip';
+if(state.activeCompetition&&state.activeCompetition.completed)state.activeCompetition=null;state.screen='splash';
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){console.error('Save failed',e);toast('Storage is full. Export a backup.')} }
+let toastTimer=null;
+function toast(msg){const root=document.getElementById('toast-root');root.innerHTML='';const el=document.createElement('div');el.className='toast';el.textContent=msg;root.appendChild(el);requestAnimationFrame(()=>el.classList.add('show'));clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),350)},2400)}
+function confirmDialog(title,message,onConfirm,confirmText,danger){const root=document.getElementById('modal-root');root.innerHTML=`<div class="modal-overlay" data-overlay><div class="modal"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(message)}</p><div class="modal-actions"><button class="modal-cancel" id="modal-cancel">Cancel</button><button id="modal-confirm" style="background:${danger?'var(--red)':'var(--gold)'};color:${danger?'#fff':'#17130A'}">${escapeHtml(confirmText||'Confirm')}</button></div></div></div>`;document.getElementById('modal-cancel').onclick=closeModal;document.getElementById('modal-confirm').onclick=()=>{closeModal();onConfirm()};root.querySelector('[data-overlay]').addEventListener('click',e=>{if(e.target.hasAttribute('data-overlay'))closeModal()})}
+function closeModal(){document.getElementById('modal-root').innerHTML=''}
+function navigate(screen,extra){state.screen=screen;if(extra)Object.assign(state,extra);saveState();render()}
+function icon(name){const paths={
+ trophy:'<path d="M8 21h8m-4-4v4M7 4h10v6a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/>',
+ play:'<path d="m8 5 12 7-12 7V5Z"/>',history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/>',
+ settings:'<circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.6.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.6-.9l-1.7.7-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.9l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.6-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.6.9l1.7-.7 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.9Z"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',back:'<path d="m15 18-6-6 6-6"/>',next:'<path d="m9 18 6-6-6-6"/>',
+ save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+ share:'<path d="M12 16V3m-5 5 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+ print:'<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/>',
+ undo:'<path d="M3 7v6h6"/><path d="M5 13a8 8 0 1 0 2-6L3 13"/>',
+ check:'<path d="m5 12 4 4L19 6"/>',close:'<path d="m6 6 12 12M18 6 6 18"/>',
+ flag:'<path d="M5 21V5m0 0c6-4 8 4 14 0v11c-6 4-8-4-14 0"/>',
+ download:'<path d="M12 3v12m-5-5 5 5 5-5"/><path d="M5 17v4h14v-4"/>',
+ upload:'<path d="M12 16V4m-5 5 5-5 5 5"/><path d="M5 17v4h14v-4"/>'
+ };return `<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths[name]||paths.flag}</svg>`}
+function render(){const app=document.getElementById('app'),same=app.dataset.screen===state.screen,oldScroll=app.querySelector('.screen')?.scrollTop||0;let html='';switch(state.screen){case'splash':html=renderSplash();break;case'home':html=renderHome();break;case'create':html=renderCreate();break;case'register':html=renderRegister();break;case'arena':html=renderArena();break;case'results':html=renderResults();break;case'history':html=renderHistory();break;case'historyDetail':html=renderHistoryDetail();break;case'settings':html=renderSettings();break;default:html=renderHome()}app.innerHTML=html;app.dataset.screen=state.screen;const screen=app.querySelector('.screen');if(screen){if(same)screen.scrollTop=oldScroll;else{screen.scrollTop=0;screen.classList.add('screen-enter')}}}
+function renderSplash(){setTimeout(()=>{if(state.screen==='splash')navigate('home')},1100);return `<div class="screen splash"><div class="logo">DUEL</div><div class="tagline">PREMIUM COMPETITION ARENA</div></div>`}
+function renderHome(){const a=state.activeCompetition;return `<div class="screen home"><div class="logo">DUEL</div><div class="subtitle">Premium Competition Management</div>${a?`<button class="btn btn-primary" onclick="DUEL.resume()">${icon('play')} Resume: ${escapeHtml(a.title)}</button><button class="btn btn-outline" onclick="DUEL.discardAndCreate()">${icon('plus')} New Competition</button>`:`<button class="btn btn-primary" onclick="DUEL.goToCreate()">${icon('plus')} Start New Competition</button>`}<button class="btn btn-outline" onclick="DUEL.nav('history')">${icon('history')} Exam History</button><button class="btn btn-outline" onclick="DUEL.nav('settings')">${icon('settings')} Settings</button><div style="flex:1"></div><div class="muted" style="font-size:10px;text-align:center;margin-top:20px;opacity:.6">VERSION 3.0 · OFFLINE FIRST · PRIVATE BY DESIGN</div></div>`}
+function renderCreate(){const d=state.createDraft;return `<div class="screen"><div class="header-bar"><button class="back-btn" onclick="DUEL.nav('home')">${icon('back')}</button><h2>New Competition</h2></div><div class="field"><label>Competition Title / Subject</label><input id="c-title" type="text" placeholder="e.g. Physics Olympiad" value="${escapeHtml(d.title)}" autocomplete="off"></div><div class="field"><label>Exam Date</label><input id="c-date" type="date" value="${escapeHtml(d.date)}"></div><div class="section-label">Scoring System</div><div class="row"><div class="field"><label>Correct</label><input id="c-correct" type="number" value="${d.correct}"></div><div class="field"><label>Incorrect</label><input id="c-incorrect" type="number" value="${d.incorrect}"></div><div class="field"><label>Skipped</label><input id="c-skipped" type="number" value="${d.skipped}"></div></div><div class="field"><label>Number of Contestants</label><div class="slider-container"><input id="c-count" type="range" min="2" max="10" value="${d.contestantCount}" oninput="document.getElementById('c-count-val').textContent=this.value"><div class="slider-value" id="c-count-val">${d.contestantCount}</div></div></div><div style="flex:1"></div><button class="btn btn-primary" onclick="DUEL.startCreate()">Continue to Registration ${icon('next')}</button></div>`}
+function startCreate(){const title=document.getElementById('c-title').value.trim(),date=document.getElementById('c-date').value,correct=Number(document.getElementById('c-correct').value),incorrect=Number(document.getElementById('c-incorrect').value),skipped=Number(document.getElementById('c-skipped').value),count=Number(document.getElementById('c-count').value);if(!title)return toast('Enter a competition title');if(!date)return toast('Select an exam date');if(![correct,incorrect,skipped].every(Number.isFinite))return toast('Invalid scoring values');if(count<2||count>10)return toast('Contestants must be 2–10');state.createDraft={title,date,contestantCount:count,correct,incorrect,skipped,names:(state.createDraft.names||[]).slice(0,count)};navigate('register')}
+function renderRegister(){const d=state.createDraft,n=d.names||[];return `<div class="screen"><div class="header-bar"><button class="back-btn" onclick="DUEL.nav('create')">${icon('back')}</button><h2>Register Contestants</h2></div><p class="muted" style="margin-bottom:16px;font-size:13px">Enter each contestant's name. ${d.contestantCount} contestants.</p><div class="reg-list">${Array.from({length:d.contestantCount},(_,i)=>`<div class="reg-item"><div class="reg-label">CONTESTANT ${pad2(i+1)}</div><input class="reg-input" id="reg-${i}" type="text" placeholder="Full name" value="${escapeHtml(n[i]||'')}" oninput="DUEL.updateRegName(${i},this.value)" autocomplete="off"></div>`).join('')}</div><button class="btn btn-primary" onclick="DUEL.beginCompetition()">Begin Competition ${icon('next')}</button></div>`}
+function updateRegName(i,v){if(!state.createDraft.names)state.createDraft.names=[];state.createDraft.names[i]=v;saveState()}
+function beginCompetition(){const d=state.createDraft,n=[];for(let i=0;i<d.contestantCount;i++){const v=((d.names||[])[i]||'').trim();if(!v){toast(`Contestant ${pad2(i+1)} name is required`);document.getElementById('reg-'+i)?.focus();return}n.push(v)}const dup=n.find((x,i)=>n.indexOf(x)!==i);if(dup)return toast(`Duplicate name: ${dup}`);state.activeCompetition={id:'comp_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),title:d.title,examDate:d.date,scoring:{correct:d.correct,incorrect:d.incorrect,skipped:d.skipped},passSettings:{seconds:state.config.passSeconds,timeoutPenalty:state.config.passTimeoutPenalty,correct:state.config.passCorrect,incorrect:state.config.passIncorrect,eligibility:state.config.passEligibility},passAttempts:[],activePass:null,contestants:n.map(name=>({name,score:0})),currentRound:1,currentContestantIndex:0,answers:[],totalRounds:1,completed:false,completedAt:null,winners:[]};saveState();navigate('arena')}
+function arenaSnapshot(c){return{contestants:deepClone(c.contestants),answers:deepClone(c.answers),passAttempts:deepClone(c.passAttempts||[]),activePass:deepClone(c.activePass||null),currentRound:c.currentRound,currentContestantIndex:c.currentContestantIndex,totalRounds:c.totalRounds}}
+function restoreArenaSnapshot(c,s){c.contestants=deepClone(s.contestants);c.answers=deepClone(s.answers);c.passAttempts=deepClone(s.passAttempts||[]);c.activePass=deepClone(s.activePass||null);c.currentRound=s.currentRound;c.currentContestantIndex=s.currentContestantIndex;c.totalRounds=s.totalRounds}
+function recordArenaAction(c){c.undoStack=c.undoStack||[];c.redoStack=[];c.undoStack.push(arenaSnapshot(c));if(c.undoStack.length>100)c.undoStack.shift()}
+function answerFor(c,round,index){return c.answers.find(a=>a.round===round&&a.contestantIndex===index)}
+function canPassQuestion(c,round,index){
+ const a=answerFor(c,round,index),mode=c.passSettings?.eligibility||'incorrect_skip';
+ if(!a)return true;
+ const skipped=a.result==='SKIPPED'||a.result==='NOT_ANSWERED';return mode==='skip_only'?skipped:(skipped||a.result==='INCORRECT');
+}
+
+let passTimerInterval=null;
+function stopPassTimer(){if(passTimerInterval){clearInterval(passTimerInterval);passTimerInterval=null}}
+function openPassPicker(){
+ const c=state.activeCompetition;if(!c||c.activePass)return;
+ if(!canPassQuestion(c,c.currentRound,c.currentContestantIndex))return toast('Pass is not allowed for this answer under current settings');
+ const others=c.contestants.map((x,i)=>({x,i})).filter(o=>o.i!==c.currentContestantIndex);
+ if(others.length===1){selectPassTarget(others[0].i);return}
+ const root=document.getElementById('modal-root');
+ root.innerHTML=`<div class="modal-overlay" data-overlay><div class="modal pass-picker"><div class="pass-modal-kicker">PASS QUESTION</div><h3>Choose a contestant</h3><p>Select who will attempt this same question. The current round will not change.</p><div class="pass-choices">${others.map(o=>`<button class="pass-choice" onclick="DUEL.selectPassTarget(${o.i})"><span class="pass-choice-avatar">${pad2(o.i+1)}</span><span>${escapeHtml(o.x.name)}</span><span class="pass-choice-arrow">›</span></button>`).join('')}</div><button class="btn btn-outline pass-cancel" onclick="DUEL.closePassPicker()">Cancel</button></div></div>`;
+ root.querySelector('[data-overlay]').addEventListener('click',e=>{if(e.target.hasAttribute('data-overlay'))closeModal()});
+}
+function selectPassTarget(targetIndex){
+ const c=state.activeCompetition;if(!c||c.activePass)return;
+ if(targetIndex===c.currentContestantIndex||!c.contestants[targetIndex])return;
+ if(!canPassQuestion(c,c.currentRound,c.currentContestantIndex))return toast('Pass is not allowed for this answer under current settings');
+ closeModal();recordArenaAction(c);
+ const seconds=Math.max(1,Math.min(300,Number(c.passSettings?.seconds)||10));
+ c.activePass={fromIndex:c.currentContestantIndex,targetIndex,round:c.currentRound,deadline:Date.now()+seconds*1000,seconds};
+ c.currentContestantIndex=targetIndex;saveState();render();startPassTimer();
+ toast(`Question passed to ${c.contestants[targetIndex].name}`);
+}
+function startPassTimer(){
+ stopPassTimer();const c=state.activeCompetition;if(!c?.activePass)return;
+ const tick=()=>{
+  const live=state.activeCompetition;if(!live?.activePass){stopPassTimer();return}
+  const remaining=Math.max(0,Math.ceil((live.activePass.deadline-Date.now())/1000));
+  const el=document.getElementById('pass-countdown');if(el)el.textContent=formatCountdown(remaining);
+  const bar=document.getElementById('pass-timer-fill');
+  if(bar)bar.style.width=Math.max(0,Math.min(100,remaining/live.activePass.seconds*100))+'%';
+  if(remaining<=0){stopPassTimer();resolvePass('TIMEOUT')}
+ };
+ tick();if(state.activeCompetition?.activePass)passTimerInterval=setInterval(tick,200);
+}
+function formatCountdown(n){return `${Math.floor(n/60).toString().padStart(2,'0')}:${(n%60).toString().padStart(2,'0')}`}
+function resolvePass(result){
+ const c=state.activeCompetition;if(!c?.activePass)return;
+ const p=c.activePass,now=Date.now();
+ // If the action is undone, restore a fresh full countdown instead of an expired timer.
+ const undoState=arenaSnapshot(c);undoState.activePass.deadline=now+p.seconds*1000;
+ recordArenaAction(c);c.undoStack[c.undoStack.length-1]=undoState;
+ const points=result==='CORRECT'?finiteNumber(c.passSettings?.correct,1):result==='INCORRECT'?finiteNumber(c.passSettings?.incorrect,-1):-Math.abs(finiteNumber(c.passSettings?.timeoutPenalty,1));
+ c.contestants[p.targetIndex].score=finiteNumber(c.contestants[p.targetIndex].score,0)+points;
+ c.passAttempts.push({round:p.round,fromIndex:p.fromIndex,targetIndex:p.targetIndex,result,points,at:new Date().toISOString()});
+ // Keep the original contestant's answer independent; they can record Incorrect/Skip after the pass.
+ c.currentRound=p.round;c.currentContestantIndex=p.fromIndex;c.activePass=null;
+ c.totalRounds=Math.max(c.totalRounds,p.round);stopPassTimer();saveState();render();
+ const label=result==='TIMEOUT'?'Time expired':result==='CORRECT'?'Pass answer correct':'Pass answer incorrect';
+ toast(`${label}: ${points>0?'+':''}${points} points`);
+}
+function closePassPicker(){closeModal()}
+
+function renderArena(){
+ const c=state.activeCompetition;
+ if(!c)return `<div class="screen"><div class="empty-state"><div class="empty-icon">⚔</div><p class="muted">No active competition.</p><button class="btn btn-primary" onclick="DUEL.nav('home')">Go Home</button></div></div>`;
+ const idx=c.currentContestantIndex,round=c.currentRound,current=c.contestants[idx],answered=c.contestants.filter((_,i)=>!!answerFor(c,round,i)).length,allAnswered=answered===c.contestants.length,answer=answerFor(c,round,idx),canUndo=(c.undoStack||[]).length>0||c.answers.length>0,canRedo=(c.redoStack||[]).length>0,canPrev=idx>0||round>1,canNext=idx<c.contestants.length-1||allAnswered,progress=Math.round(answered/c.contestants.length*100),pass=c.activePass,passTarget=pass?c.contestants[pass.targetIndex]:null;
+ const passPanel=pass?`<div class="pass-live-card"><div class="pass-live-top"><span class="pass-live-label">⚡ PASS CHALLENGE</span><span class="pass-live-to">ANSWERING: ${escapeHtml(passTarget.name)}</span></div><div class="pass-timer" id="pass-countdown">00:00</div><div class="pass-timer-track"><span id="pass-timer-fill"></span></div><div class="pass-live-hint">Same question · Round ${pass.round} remains active</div><div class="eval-buttons pass-eval-buttons"><button class="eval-btn eval-correct" onclick="DUEL.resolvePass('CORRECT')">PASS CORRECT<span class="pts">${formatPoints(c.passSettings?.correct)}</span></button><button class="eval-btn eval-incorrect" onclick="DUEL.resolvePass('INCORRECT')">PASS INCORRECT<span class="pts">${formatPoints(c.passSettings?.incorrect)}</span></button></div></div>`:
+ `<button class="btn pass-trigger" onclick="DUEL.openPassPicker()" ${!canPassQuestion(c,round,idx)?'disabled':''}>↗ PASS QUESTION <small>${answer?'Pass available after recorded result':'You can record Incorrect / Skip after passing'}</small></button>`;
+ return `<div class="screen arena-screen" style="padding:14px;padding-top:calc(14px + env(safe-area-inset-top));padding-bottom:calc(14px + env(safe-area-inset-bottom))"><div class="scoreboard-wrap"><div class="scoreboard-heading"><span>LIVE SCOREBOARD</span><span>${c.contestants.length} competitors</span></div><div class="scoreboard">${c.contestants.map((ct,i)=>{const a=answerFor(c,round,i);return `<div class="score-card ${i===idx?'active':''} ${a?'answered':''}" title="${escapeHtml(ct.name)}"><div class="score-name">${escapeHtml(ct.name)}</div><div class="score-value">${finiteNumber(ct.score,0)}</div></div>`}).join('')}</div></div><div class="arena-meta"><span>ROUND <strong>${round}</strong></span><span><strong>${answered}/${c.contestants.length}</strong> answered</span></div><div class="arena-progress"><span style="width:${progress}%"></span></div><div class="contestant-display"><div class="round-badge">ROUND ${round}</div><div class="contestant-number">${pass?'PASS RECIPIENT':'CONTESTANT '+pad2(idx+1)+' OF '+pad2(c.contestants.length)}</div><div class="contestant-name">${escapeHtml(current.name)}</div><div class="contestant-score">Total score: <strong>${finiteNumber(current.score,0)}</strong></div></div>${pass?passPanel:`<div class="answer-status ${answer?'done':''}"><span class="dot"></span>${answer?`Recorded: ${answer.result.replace('_',' ')} · ${answer.points>0?'+':''}${answer.points} points`:'Waiting for evaluation'}</div><div class="eval-buttons"><button class="eval-btn eval-correct ${answer?.result==='CORRECT'?'selected':''}" onclick="DUEL.evaluate('CORRECT')" ${answer?'disabled':''}>${answer?.result==='CORRECT'?'✓ ':''}CORRECT<span class="pts">${c.scoring.correct>0?'+':''}${c.scoring.correct}</span></button><button class="eval-btn eval-incorrect ${answer?.result==='INCORRECT'?'selected':''}" onclick="DUEL.evaluate('INCORRECT')" ${answer?'disabled':''}>${answer?.result==='INCORRECT'?'✓ ':''}INCORRECT<span class="pts">${c.scoring.incorrect>0?'+':''}${c.scoring.incorrect}</span></button><button class="eval-btn eval-skip ${answer?.result==='NOT_ANSWERED'?'selected':''}" onclick="DUEL.evaluate('NOT_ANSWERED')" ${answer?'disabled':''}>${answer?.result==='NOT_ANSWERED'?'✓ ':''}SKIP<span class="pts">${c.scoring.skipped>0?'+':''}${c.scoring.skipped}</span></button></div>${passPanel}`}<div class="nav-buttons"><button class="nav-btn" onclick="DUEL.previousTurn()" ${canPrev&&!pass?'':'disabled'}>← PREV</button><button class="nav-btn undo" onclick="DUEL.undoLast()" ${canUndo&&!pass?'':'disabled'}>${icon('undo')} UNDO</button><button class="nav-btn primary" onclick="DUEL.nextTurn()" ${canNext&&!pass?'':'disabled'}>${idx===c.contestants.length-1&&allAnswered?'NEXT ROUND →':'NEXT →'}</button></div><div class="nav-buttons" style="grid-template-columns:1fr 1fr;margin-top:-3px"><button class="nav-btn" onclick="DUEL.redoLast()" ${canRedo&&!pass?'':'disabled'}>↻ REDO</button><button class="nav-btn" onclick="DUEL.goToFirstPending()" ${answered===c.contestants.length||pass?'disabled':''}>NEXT PENDING ↓</button></div><button class="btn btn-danger" style="margin-top:4px" onclick="DUEL.completeCompetition()" ${pass?'disabled':''}>${icon('flag')} COMPLETE COMPETITION</button></div>`;
+}
+function evaluate(result){const c=state.activeCompetition;if(!c||c.activePass)return;const i=c.currentContestantIndex,r=c.currentRound,old=answerFor(c,r,i),points=result==='CORRECT'?finiteNumber(c.scoring?.correct,2):result==='INCORRECT'?finiteNumber(c.scoring?.incorrect,-1):finiteNumber(c.scoring?.skipped,0);if(old&&old.result===result)return toast('This answer is already recorded');recordArenaAction(c);if(old){c.contestants[i].score=finiteNumber(c.contestants[i].score,0)-finiteNumber(old.points,0);old.result=result;old.points=points}else c.answers.push({contestantIndex:i,round:r,result,points});c.contestants[i].score=finiteNumber(c.contestants[i].score,0)+points;c.totalRounds=Math.max(c.totalRounds,r);saveState();render();toast(old?'Answer updated':'Score recorded')}
+function nextTurn(){const c=state.activeCompetition;if(!c||c.activePass)return;if(c.currentContestantIndex<c.contestants.length-1){c.currentContestantIndex++;saveState();render();return}const all=c.contestants.every((_,i)=>!!answerFor(c,c.currentRound,i));if(all){startNextRound();return}toast('Round is not complete. Use Next Pending to find an unanswered contestant.')}
+function previousTurn(){const c=state.activeCompetition;if(!c||c.activePass)return;if(c.currentContestantIndex>0)c.currentContestantIndex--;else if(c.currentRound>1){c.currentRound--;c.currentContestantIndex=c.contestants.length-1}else return toast('You are at the first contestant');saveState();render()}
+function undoLast(){const c=state.activeCompetition;if(!c||c.activePass)return;if(!(c.undoStack||[]).length){if(!c.answers.length)return toast('Nothing to undo');const current=arenaSnapshot(c),last=c.answers[c.answers.length-1],previous=deepClone(current);previous.answers.pop();previous.contestants[last.contestantIndex].score-=last.points;previous.currentRound=last.round;previous.currentContestantIndex=last.contestantIndex;previous.totalRounds=Math.max(1,previous.answers.reduce((m,a)=>Math.max(m,a.round),1));c.undoStack=[previous]}const previous=c.undoStack.pop();c.redoStack=c.redoStack||[];c.redoStack.push(arenaSnapshot(c));restoreArenaSnapshot(c,previous);saveState();render();if(c.activePass)startPassTimer();else stopPassTimer();toast('Last change undone')}
+function redoLast(){const c=state.activeCompetition;if(!c||c.activePass||!(c.redoStack||[]).length)return toast('Nothing to redo');c.undoStack=c.undoStack||[];c.undoStack.push(arenaSnapshot(c));const next=c.redoStack.pop();restoreArenaSnapshot(c,next);saveState();render();if(c.activePass)startPassTimer();else stopPassTimer();toast('Change restored')}
+function goToFirstPending(){const c=state.activeCompetition;if(!c||c.activePass)return;const i=c.contestants.findIndex((_,idx)=>!answerFor(c,c.currentRound,idx));if(i<0)return toast('All contestants have answered');c.currentContestantIndex=i;saveState();render()}
+function startNextRound(){const c=state.activeCompetition;if(!c||c.activePass)return;const unanswered=c.contestants.filter((_,i)=>!answerFor(c,c.currentRound,i));if(unanswered.length)return toast(`${unanswered.length} contestant(s) still need an evaluation`);recordArenaAction(c);c.currentRound++;c.currentContestantIndex=0;c.totalRounds=Math.max(c.totalRounds,c.currentRound);saveState();render();toast(`Round ${c.currentRound} started`)}
+function completeCompetition(){const c=state.activeCompetition;if(!c||c.activePass)return;if(!c.answers.length)return toast('Evaluate at least one answer first');confirmDialog('Complete Competition?','This will end the competition and save final results to history. You cannot continue afterward.',()=>{c.completed=true;c.completedAt=new Date().toISOString();const top=Math.max(...c.contestants.map(x=>x.score));c.winners=c.contestants.filter(x=>x.score===top).map(x=>x.name);const record=deepClone(c);delete record.currentContestantIndex;delete record.currentRound;state.history.push(record);saveState();navigate('results')},'Complete',true)}
+function rankInfo(contestants){const sorted=[...contestants].sort((a,b)=>b.score-a.score);const top=sorted[0]?.score??0;const winners=sorted.filter(x=>x.score===top);let lastScore=null,rank=0;const withRanks=sorted.map((ct,i)=>{if(lastScore===null||ct.score!==lastScore)rank=i+1;lastScore=ct.score;return{...ct,rank}});return{sorted:withRanks,winners,top}}
+function renderResults(){const c=state.activeCompetition;if(!c)return `<div class="screen"><div class="empty-state"><p class="muted">No results</p></div></div>`;return renderResultsBody(c,true)}
+function renderResultsBody(c,isActive){const{sorted,winners}=rankInfo(c.contestants);return `<div class="screen"><div class="no-print" style="text-align:center;margin-bottom:16px"><h1 class="gold" style="font-size:25px">${icon('trophy')} FINAL RESULTS</h1></div><div class="champion-card"><span class="trophy">🏆</span><div class="champion-label">${winners.length>1?'JOINT CHAMPIONS':'CHAMPION'}</div>${winners.map(w=>`<div class="champion-name">${escapeHtml(w.name)}</div><div class="champion-score">${w.score} points</div>`).join('')}${winners.length>1?'<div class="joint-note">Equal highest score</div>':''}</div><div style="text-align:center;margin-bottom:20px"><h2>${escapeHtml(c.title)}</h2><div class="muted" style="font-size:12px;margin-top:5px">${escapeHtml(c.examDate)} · ${c.contestants.length} contestants · ${c.totalRounds} round${c.totalRounds!==1?'s':''}</div><div class="muted" style="font-size:10px;margin-top:4px">Scoring: Correct +${c.scoring.correct} · Incorrect ${c.scoring.incorrect} · Skipped ${c.scoring.skipped}<br>Pass: Correct ${c.passSettings?.correct??1} · Incorrect ${c.passSettings?.incorrect??-1} · Timeout −${c.passSettings?.timeoutPenalty??1} (${c.passSettings?.seconds??10}s)</div></div><div class="section-label">Final Leaderboard · ${sorted.length} competitors</div>${sorted.map(ct=>{const cls=ct.rank===1?'first':ct.rank===2?'second':ct.rank===3?'third':'';return `<div class="leaderboard-item"><div class="rank-badge ${cls}">${ct.rank}</div><div class="lb-name">${escapeHtml(ct.name)}</div><div class="lb-score">${finiteNumber(ct.score,0)}</div></div>`}).join('')}${isActive?`<div class="no-print" style="margin-top:18px;display:flex;flex-direction:column;gap:8px"><button class="btn btn-primary" onclick="DUEL.printResults()">${icon('print')} Print / Save as PDF</button><button class="btn btn-outline" onclick="DUEL.shareActive()">${icon('share')} Share Results</button><button class="btn btn-outline" onclick="DUEL.goHomeFromResults()">Start New Competition</button></div>`:''}</div>`}
+function printResults(){window.print()}
+function shareTextFor(c){const{winners,sorted}=rankInfo(c.contestants);let t=`🏆 ${c.title}\n📅 ${c.examDate}\n\nChampion${winners.length>1?'s':''}: ${winners.map(w=>`${w.name} (${w.score})`).join(', ')}\n\nFinal Leaderboard:\n`;sorted.forEach(ct=>t+=`${ct.rank}. ${ct.name} — ${ct.score}\n`);return t+'\n— DUEL Arena'}
+function shareActive(){const c=state.activeCompetition;if(c)shareText(shareTextFor(c),`DUEL: ${c.title}`)}
+function shareText(t,title){if(navigator.share)navigator.share({title,text:t}).catch(()=>{});else if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>toast('Copied to clipboard'),()=>fallbackCopy(t));else fallbackCopy(t)}
+function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copied to clipboard')}catch(e){toast('Copy not supported')}ta.remove()}
+function goHomeFromResults(){state.activeCompetition=null;saveState();navigate('home')}
+function renderHistory(){return `<div class="screen"><div class="header-bar"><button class="back-btn" onclick="DUEL.nav('home')">${icon('back')}</button><h2>Exam History</h2></div><div class="search-bar"><input type="text" id="hist-search" placeholder="Search subject, contestant, or winner" value="${escapeHtml(state.historySearch)}" oninput="DUEL.updateHistorySearch(this.value)"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><button class="btn-ghost" style="padding:8px 0;color:var(--gold2);border:0" onclick="DUEL.toggleHistorySort()">${state.historySort==='newest'?'↓ Newest First':'↑ Oldest First'}</button><span class="muted" style="font-size:11px">${state.history.length} records</span></div><div id="hist-list" style="flex:1">${renderHistoryList()}</div>${state.history.length?`<button class="btn btn-ghost" style="color:var(--red);margin-top:10px" onclick="DUEL.clearHistory()">Clear All History</button>`:''}</div>`}
+function renderHistoryList(){let list=[...state.history].sort((a,b)=>state.historySort==='newest'?new Date(b.completedAt)-new Date(a.completedAt):new Date(a.completedAt)-new Date(b.completedAt));if(state.historySearch){const q=state.historySearch.toLowerCase();list=list.filter(c=>(c.title||'').toLowerCase().includes(q)||(c.winners||[]).some(w=>w.toLowerCase().includes(q))||c.contestants.some(x=>x.name.toLowerCase().includes(q)))}if(!list.length)return `<div class="empty-state"><div class="empty-icon">◷</div><p class="muted">${state.history.length?'No matches found.':'No competitions saved yet.'}</p>${!state.history.length?'<button class="btn btn-primary" onclick="DUEL.goToCreate()">Start Your First Competition</button>':''}</div>`;return list.map(c=>`<div class="history-item" onclick="DUEL.openHistoryDetail('${c.id}')"><button class="history-delete" onclick="event.stopPropagation();DUEL.deleteHistory('${c.id}')">${icon('close')}</button><div class="history-title">${escapeHtml(c.title)}</div><div class="history-meta">${escapeHtml(c.examDate)} · ${c.contestants.length} contestants · ${c.totalRounds} rounds</div><div class="history-winners">🏆 ${(c.winners||[]).map(escapeHtml).join(', ')}</div></div>`).join('')}
+function updateHistorySearch(v){state.historySearch=v;saveState();const el=document.getElementById('hist-list');if(el)el.innerHTML=renderHistoryList()}
+function toggleHistorySort(){state.historySort=state.historySort==='newest'?'oldest':'newest';saveState();render()}
+function openHistoryDetail(id){state.historyDetailId=id;navigate('historyDetail')}
+function deleteHistory(id){confirmDialog('Delete Competition?','This will permanently delete this record.',()=>{state.history=state.history.filter(c=>c.id!==id);saveState();render();toast('Deleted')},'Delete',true)}
+function clearHistory(){confirmDialog('Clear All History?',`This will permanently delete all ${state.history.length} records.`,()=>{state.history=[];state.historySearch='';saveState();render();toast('History cleared')},'Clear All',true)}
+function renderHistoryDetail(){const c=state.history.find(x=>x.id===state.historyDetailId);if(!c){setTimeout(()=>navigate('history'),300);return ''}const body=renderResultsBody(c,false);return `<div class="screen" style="padding:0"><div style="padding:20px 20px 0" class="no-print"><div class="header-bar" style="margin:0"><button class="back-btn" onclick="DUEL.nav('history')">${icon('back')}</button><h2>Result Details</h2></div></div><div style="flex:1;overflow-y:auto;padding:20px 20px 24px">${body.replace('<div class="screen">','<div style="display:flex;flex-direction:column">').replace(/<\/div>\s*$/,'</div>')}<div class="no-print" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"><button class="btn btn-primary" onclick="DUEL.printResults()">${icon('print')} Print / Save as PDF</button><button class="btn btn-outline" onclick="DUEL.shareHistory('${c.id}')">${icon('share')} Share</button></div></div></div>`}
+function shareHistory(id){const c=state.history.find(x=>x.id===id);if(c)shareText(shareTextFor(c),`DUEL: ${c.title}`)}
+function renderSettings(){const c=state.config;return `<div class="screen"><div class="header-bar"><button class="back-btn" onclick="DUEL.nav('home')">${icon('back')}</button><h2>Settings</h2></div><div class="section-label">Default Scoring</div><div class="row"><div class="field"><label>Correct</label><input id="s-correct" type="number" value="${c.defaultCorrect}"></div><div class="field"><label>Incorrect</label><input id="s-incorrect" type="number" value="${c.defaultIncorrect}"></div><div class="field"><label>Skipped</label><input id="s-skipped" type="number" value="${c.defaultSkipped}"></div></div><button class="btn btn-outline" onclick="DUEL.saveDefaults()">Save Defaults</button><div class="section-label" style="margin-top:27px">Pass Challenge Settings</div><p class="muted" style="font-size:11px;line-height:1.5;margin:-5px 0 13px">These rules apply when a question is passed to another contestant. Timeout penalty is deducted automatically when the countdown ends.</p><div class="field"><label>When is Pass allowed?</label><select id="s-pass-eligibility"><option value="skip_only" ${c.passEligibility==='skip_only'?'selected':''}>Only after Skip</option><option value="incorrect_skip" ${c.passEligibility!=='skip_only'?'selected':''}>After Incorrect or Skip</option></select></div><div class="row"><div class="field"><label>Countdown (seconds)</label><input id="s-pass-seconds" type="number" min="1" max="300" step="1" value="${c.passSeconds}"></div><div class="field"><label>Timeout deduction</label><input id="s-pass-penalty" type="number" min="0" step="1" value="${c.passTimeoutPenalty}"></div></div><div class="row"><div class="field"><label>Pass Correct</label><input id="s-pass-correct" type="number" step="any" value="${c.passCorrect}"></div><div class="field"><label>Pass Incorrect</label><input id="s-pass-incorrect" type="number" step="any" value="${c.passIncorrect}"></div></div><button class="btn btn-outline" onclick="DUEL.savePassSettings()">Save Pass Settings</button><div class="section-label" style="margin-top:27px">Data Management</div><div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-outline" onclick="DUEL.backup()">${icon('download')} Export Backup (JSON)</button><button class="btn btn-outline" onclick="document.getElementById('import-file').click()">${icon('upload')} Import Backup</button><input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="DUEL.importFile(event)"><button class="btn btn-danger" onclick="DUEL.clearAllData()">Clear All App Data</button></div><div class="section-label" style="margin-top:27px">About</div><div class="card"><h3 class="gold">DUEL · VERSION 3.0</h3><p class="muted" style="margin-top:8px;font-size:12px;line-height:1.7">Refined competition management.<br>Offline-first · Data stored locally on this device.<br>No account required.</p></div></div>`}
+function saveDefaults(){const vals=['s-correct','s-incorrect','s-skipped'].map(id=>Number(document.getElementById(id).value));if(!vals.every(Number.isFinite))return toast('Invalid scoring values');state.config.defaultCorrect=vals[0];state.config.defaultIncorrect=vals[1];state.config.defaultSkipped=vals[2];saveState();toast('Defaults saved')}
+function savePassSettings(){const seconds=Number(document.getElementById('s-pass-seconds').value),penalty=Number(document.getElementById('s-pass-penalty').value),correct=Number(document.getElementById('s-pass-correct').value),incorrect=Number(document.getElementById('s-pass-incorrect').value);if(!Number.isInteger(seconds)||seconds<1||seconds>300)return toast('Countdown must be 1–300 seconds');if(!Number.isFinite(penalty)||penalty<0||![correct,incorrect].every(Number.isFinite))return toast('Check pass scoring values');state.config.passSeconds=seconds;state.config.passTimeoutPenalty=penalty;state.config.passCorrect=correct;state.config.passIncorrect=incorrect;state.config.passEligibility=document.getElementById('s-pass-eligibility').value==='skip_only'?'skip_only':'incorrect_skip';if(state.activeCompetition){state.activeCompetition.passSettings=Object.assign({},state.activeCompetition.passSettings,{seconds,timeoutPenalty:penalty,correct,incorrect,eligibility:state.config.passEligibility})}saveState();toast('Pass settings saved')}
+function backup(){const payload={schemaVersion:SCHEMA_VERSION,exportedAt:new Date().toISOString(),history:state.history,config:state.config};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`duel-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup downloaded')}
+function importFile(ev){const f=ev.target.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=e=>{try{const d=JSON.parse(e.target.result);if(!Array.isArray(d.history))return toast('Invalid backup file');let count=0;const ids=new Set(state.history.map(x=>x.id));d.history.forEach(c=>{if(c?.id&&!ids.has(c.id)&&Array.isArray(c.contestants)){state.history.push(normalizeCompetition(c));ids.add(c.id);count++}});if(d.config&&typeof d.config==='object')state.config=Object.assign(state.config,d.config);saveState();toast(`Imported ${count} competition${count===1?'':'s'}`);render()}catch(err){toast('Could not parse file')}};reader.readAsText(f);ev.target.value=''}
+function clearAllData(){confirmDialog('Clear All Data?','This will delete ALL competitions, history, and settings. This cannot be undone.',()=>{state=defaultState();state.screen='home';saveState();render();toast('All data cleared')},'Clear Everything',true)}
+function goToCreate(){const c=state.config;state.createDraft={title:'',date:new Date().toISOString().slice(0,10),contestantCount:2,correct:c.defaultCorrect,incorrect:c.defaultIncorrect,skipped:c.defaultSkipped,names:[]};navigate('create')}
+function resume(){navigate('arena')}
+function discardAndCreate(){confirmDialog('Discard Active Competition?','Your current progress will be lost.',()=>{state.activeCompetition=null;goToCreate()},'Discard',true)}
+window.DUEL={nav:s=>navigate(s),goToCreate,startCreate,updateRegName,beginCompetition,evaluate,nextTurn,previousTurn,undoLast,redoLast,goToFirstPending,startNextRound,completeCompetition,printResults,shareActive,goHomeFromResults,updateHistorySearch,toggleHistorySort,openHistoryDetail,deleteHistory,clearHistory,shareHistory,saveDefaults,savePassSettings,openPassPicker,selectPassTarget,closePassPicker,resolvePass,backup,importFile,clearAllData,resume,discardAndCreate};
+render();if(state.activeCompetition?.activePass){if(state.activeCompetition.activePass.deadline<=Date.now())resolvePass('TIMEOUT');else startPassTimer()}
+})();
+</script>
+</body>
+</html>
